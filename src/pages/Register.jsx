@@ -1,6 +1,57 @@
 import { LogoIcon, AddImageIcon } from "../assets/icons";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, storage, db } from "../firebase";
 
 const Register = () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const displayName = e.target[0].value;
+    const email = e.target[1].value;
+    const password = e.target[2].value;
+    const imgFile = e.target[3].files[0];
+
+    try {
+      //new user creation
+      const newUser = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      ).then((userCredentialImpl) => userCredentialImpl.user);
+
+      //upload image
+      let avatarURL = "";
+      if (imgFile) {
+        const newAvatarRef = ref(
+          storage,
+          `avatars/${newUser.uid}/${imgFile.name}`
+        );
+        const uploadTask = uploadBytesResumable(newAvatarRef, imgFile);
+        uploadTask.on("state_changed", {
+          error: (error) => console.log("uploadTask error =>", error),
+          // si se sube correctamente, actualiza el perfil del usuario.
+          complete: async () => {
+            avatarURL = await getDownloadURL(uploadTask.snapshot.ref);
+            await updateProfile(newUser, { displayName, avatarURL: avatarURL });
+            //actualiza la lista de contactos en la bd
+            await setDoc(doc(db, "users", newUser.uid), {
+              uid: newUser.uid,
+              avatarURL: avatarURL,
+              color: "teal",
+              displayName: displayName,
+              email: email,
+            });
+          },
+        });
+      }
+
+      e.target.reset();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="formWrapper h-full w-full flex justify-center items-center bg-neutral-50 dark:bg-neutral-950 text-neutral-950 dark:text-neutral-50">
       <div className="formContainer flex flex-col items-center gap-2 px-5 py-4 w-11/12  max-w-[450px] md:max-w-[400px] font-mono">
@@ -11,7 +62,10 @@ const Register = () => {
 
         <p className="text-sm font-thin">Register</p>
 
-        <form className="flex flex-col items-center w-full gap-2">
+        <form
+          className="flex flex-col items-center w-full gap-2"
+          onSubmit={handleSubmit}
+        >
           <input
             type="text"
             placeholder="display name"
@@ -25,10 +79,16 @@ const Register = () => {
           <input
             type="password"
             placeholder="password"
+            suggested="current-password"
             className="w-full px-4 py-3 border-b border-neutral-950 dark:border-neutral-50 bg-transparent "
           />
           <label className="cursor-pointer flex items-center self-start mt-3 gap-3 px-3">
-            <input type="file" placeholder="Add an avatar" className="hidden" />
+            <input
+              type="file"
+              placeholder="Add an avatar"
+              className="hidden"
+              accept="image/png, image/jpeg, image/jpg"
+            />
             <AddImageIcon className="w-12 h-12 fill-teal-5 00 fill-teal-500 dark:fill-teal-600" />
             <span>{`Add an Avatar`}</span>
           </label>
