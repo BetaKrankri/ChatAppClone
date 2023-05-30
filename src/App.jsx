@@ -7,9 +7,9 @@ import Home from "./pages/Home";
 function App() {
   return (
     <div className={`h-screen w-full dark:bg-red-950 bg-red-100`}>
-      {/* <Register /> */}
+      <Register />
       {/* <Login /> */}
-      <Home />
+      {/* <Home /> */}
     </div>
   );
 }
