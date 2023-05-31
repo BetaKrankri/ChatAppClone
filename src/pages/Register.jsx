@@ -3,8 +3,11 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, storage, db } from "../firebase";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const displayName = e.target[0].value;
@@ -42,11 +45,14 @@ const Register = () => {
               displayName: displayName,
               email: email,
             });
+
+            //
+            await setDoc(doc(db, "useChats", newUser.uid), {});
+            e.target.reset();
+            navigate("/");
           },
         });
       }
-
-      e.target.reset();
     } catch (error) {
       console.error(error);
     }

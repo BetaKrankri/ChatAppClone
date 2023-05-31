@@ -1,6 +1,8 @@
 import ColorModeSwitch from "./ColorModeSwitch";
 import { LogoIcon } from "../assets/icons";
 import { useState } from "react";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
 
 const Navbar = () => {
   const [isShown, setIsShown] = useState(false);
@@ -54,6 +56,7 @@ const Navbar = () => {
             onClick={(e) => {
               e.stopPropagation();
               setIsShown((is) => !is);
+              signOut(auth);
             }}
           >
             Log out
