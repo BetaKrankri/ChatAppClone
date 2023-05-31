@@ -47,7 +47,10 @@ const Register = () => {
             });
 
             //
-            await setDoc(doc(db, "userChats", newUser.uid), {});
+            await setDoc(doc(db, "userChats", newUser.uid), {
+
+
+            });
             e.target.reset();
             navigate("/");
           },
