@@ -12,6 +12,7 @@ function App() {
     if (!currentUser) {
       return <Navigate to="/login" />;
     }
+    return children;
   };
 
   return (
@@ -27,8 +28,8 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
           </Route>
         </Routes>
       </BrowserRouter>
