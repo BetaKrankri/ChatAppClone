@@ -4,7 +4,7 @@ import Search from "./Search";
 import Chats from "./Chats.jsx";
 
 const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(true)
   return (
     <div
       className={`Wrapper ${
