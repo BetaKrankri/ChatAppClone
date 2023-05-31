@@ -1,10 +1,9 @@
 import { LogoIcon, AddImageIcon } from "../assets/icons";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, storage, db } from "../firebase";
 import { useNavigate, Link } from "react-router-dom";
-import { useState } from "react";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -24,52 +23,31 @@ const Register = () => {
         password
       ).then((userCredentialImpl) => userCredentialImpl.user);
 
-      // upload image
       let avatarURL = "";
+
+      // upload image
       if (imgFile) {
         const newAvatarRef = ref(
           storage,
           `avatars/${newUser.uid}/${imgFile.name}`
         );
-        const uploadTask = uploadBytesResumable(newAvatarRef, imgFile);
-        uploadTask.on("state_changed", {
-          error: (error) => console.log("uploadTask error =>", error),
-
-          // si se sube correctamente,
-          complete: async () => {
-            avatarURL = await getDownloadURL(uploadTask.snapshot.ref);
-            // actualiza el perfil del usuario.
-            await updateProfile(newUser, { displayName, photoURL: avatarURL });
-            // crea un nuevo documento en la coleccion de users en al bd
-            await setDoc(doc(db, "users", newUser.uid), {
-              uid: newUser.uid,
-              photoURL: avatarURL,
-              color: "teal",
-              displayName: displayName,
-              email: email,
-            });
-            // crea un documento en la coleccion de userChats en la bd
-            await setDoc(doc(db, "userChats", newUser.uid), {});
-            e.target.reset();
-            navigate("/");
-          },
-        });
-      } else {
-        // actualiza el perfil del usuario.
-        await updateProfile(newUser, { displayName });
-        // actualiza la lista de usuarios en la bd
-        await setDoc(doc(db, "users", newUser.uid), {
-          uid: newUser.uid,
-          photoURL: avatarURL,
-          color: "teal",
-          displayName: displayName,
-          email: email,
-        });
-        // crea un documento en la coleccion de userChats
-        await setDoc(doc(db, "userChats", newUser.uid), {});
-        e.target.reset();
-        navigate("/");
+        const uploadResult = await uploadBytes(newAvatarRef, imgFile);
+        avatarURL = await getDownloadURL(uploadResult.ref);
       }
+      // actualiza el perfil del usuario.
+      await updateProfile(newUser, { displayName, photoURL: avatarURL });
+      // actualiza la lista de usuarios en la bd
+      await setDoc(doc(db, "users", newUser.uid), {
+        uid: newUser.uid,
+        photoURL: avatarURL,
+        color: "teal",
+        displayName: displayName,
+        email: email,
+      });
+      // crea un documento en la coleccion de userChats
+      await setDoc(doc(db, "userChats", newUser.uid), {});
+      e.target.reset();
+      navigate("/");
     } catch (error) {
       console.error(error);
     }
