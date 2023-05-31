@@ -3,7 +3,7 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, storage, db } from "../firebase";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -36,18 +36,18 @@ const Register = () => {
           // si se sube correctamente, actualiza el perfil del usuario.
           complete: async () => {
             avatarURL = await getDownloadURL(uploadTask.snapshot.ref);
-            await updateProfile(newUser, { displayName, avatarURL: avatarURL });
+            await updateProfile(newUser, { displayName, photoURL: avatarURL });
             //actualiza la lista de contactos en la bd
             await setDoc(doc(db, "users", newUser.uid), {
               uid: newUser.uid,
-              avatarURL: avatarURL,
+              photoURL: avatarURL,
               color: "teal",
               displayName: displayName,
               email: email,
             });
 
             //
-            await setDoc(doc(db, "useChats", newUser.uid), {});
+            await setDoc(doc(db, "userChats", newUser.uid), {});
             e.target.reset();
             navigate("/");
           },
@@ -85,7 +85,6 @@ const Register = () => {
           <input
             type="password"
             placeholder="password"
-            suggested="current-password"
             className="w-full px-4 py-3 border-b border-neutral-950 dark:border-neutral-50 bg-transparent "
           />
           <label className="cursor-pointer flex items-center self-start mt-3 gap-3 px-3">
@@ -106,12 +105,12 @@ const Register = () => {
 
         <p className=" text-xs mt-5">
           Do you have an account?{" "}
-          <a
-            href="#"
+          <Link
+            to="/login"
             className="font-bold underline hover:text-teal-500 text-neutral-950 hover:no-underline dark:text-neutral-50 dark:hover:text-teal-600"
           >
             Login
-          </a>
+          </Link>
         </p>
       </div>
     </div>
