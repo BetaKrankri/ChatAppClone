@@ -1,21 +1,26 @@
 import ColorModeSwitch from "./ColorModeSwitch";
 import { LogoIcon } from "../assets/icons";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
+import { AuthContext } from "../context/AuthContext";
 
 const Navbar = () => {
   const [isShown, setIsShown] = useState(false);
+
+  const {currentUser} = useContext(AuthContext);
 
   return (
     <div className="w-full px-4 md:py-2 py-2.5 flex justify-between items-center bg-teal-500 rounded-sm text-neutral-950 relative">
       <div className="flex items-center gap-4">
         <div className="rounded-full overflow-hidden w-14 h-14 grid place-items-center bg-teal-950">
           <img
-            className="w-full h-full object-contain rounded-md overflow-hidden"
-            src=""
+            className="w-full h-full object-cover rounded-md overflow-hidden"
+            src={currentUser.photoURL}
           />
         </div>
         <p className=" text-lg font-bold text-neutral-50 dark:text-neutral-950">
-          Enrique Domínguez
+          {currentUser.displayName}
         </p>
       </div>
 
@@ -54,6 +59,7 @@ const Navbar = () => {
             onClick={(e) => {
               e.stopPropagation();
               setIsShown((is) => !is);
+              signOut(auth);
             }}
           >
             Log out

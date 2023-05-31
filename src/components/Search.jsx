@@ -1,7 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { SearchIcon } from "../assets/icons";
 
 const Search = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearch = () => {
+    //TODO: handle search
+    console.log("searching for: ", searchTerm);
+  };
+
+  const handleEnter = (e) => {
+    e.code === "Enter" && handleSearch();
+  };
+
   return (
     <div className="search border-b border-neutral-950 dark:border-neutral-50">
       <div className="searchForm w-full py-5 px-8">
@@ -11,6 +22,8 @@ const Search = () => {
             type="text"
             className="w-full outline-none bg-transparent"
             placeholder="Find a user"
+            onKeyDown={handleEnter}
+            onChange={(e) => setSearchTerm((st) => e.target.value)}
           />
         </div>
       </div>
