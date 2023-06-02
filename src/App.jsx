@@ -16,7 +16,7 @@ function App() {
   };
 
   return (
-    <div className={`h-screen w-full dark:bg-red-950 bg-red-100`}>
+    <div className={`h-screen w-full`}>
       <BrowserRouter>
         <Routes>
           <Route path="/">
