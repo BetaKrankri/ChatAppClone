@@ -188,7 +188,6 @@ export function SendIcon(props) {
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
       fill="inherit"
-
       {...props}
     >
       <g fillRule="nonzero" stroke="none" strokeWidth={1} fill="none">
@@ -210,16 +209,17 @@ export function SendIcon(props) {
 
 export function BackArrowIcon(props) {
   return (
-    <svg
-      fill="#000"
-      height="50px"
-      width="50px"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 477.175 477.175"
-      xmlSpace="preserve"
-      {...props}
-    >
-      <path d="M145.188 238.575l215.5-215.5c5.3-5.3 5.3-13.8 0-19.1s-13.8-5.3-19.1 0l-225.1 225.1c-5.3 5.3-5.3 13.8 0 19.1l225.1 225c2.6 2.6 6.1 4 9.5 4s6.9-1.3 9.5-4c5.3-5.3 5.3-13.8 0-19.1l-215.4-215.5z" />
-    </svg>
-  )
+    <div {...props}>
+      <svg
+        height="141.732px"
+        viewBox="0 0 141.732 141.732"
+        width="141.732px"
+        xmlSpace="preserve"
+        xmlns="http://www.w3.org/2000/svg"
+        {...props}
+      >
+        <path d="M105.614 118.681c3.398 3.396 3.4 8.912 0 12.311-3.396 3.399-8.91 3.398-12.311 0-.02-.02-.035-.04-.053-.061l-.025.022-57.66-57.66.024-.022a8.664 8.664 0 01-2.608-6.208 8.672 8.672 0 013.229-6.762l-.06-.058 57.66-57.66.025.024c.018-.021.033-.039.053-.058A8.706 8.706 0 01106.2 14.86c-.021.02-.041.034-.061.054l.023.024-52.119 52.125 51.54 51.54-.025.021c.015.022.036.036.056.057" />
+      </svg>
+    </div>
+  );
 }

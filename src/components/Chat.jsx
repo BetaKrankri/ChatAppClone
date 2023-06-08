@@ -1,21 +1,28 @@
-import { AddContactIcon, SearchIcon } from "../assets/icons";
+import { AddContactIcon, BackArrowIcon, SearchIcon } from "../assets/icons";
 import Messages from "./Messages";
 import Input from "./Input";
 import { useContext } from "react";
 import { HomePageContext } from "../context/HomePageContext";
 
 const Chat = () => {
-  const { currentConversationID, userChats } = useContext(HomePageContext);
+  const { currentConversationID, userChats, setCurrentConversationID } =
+    useContext(HomePageContext);
 
   return currentConversationID ? (
     <div className="w-full h-full flex flex-col">
       {/* Top */}
       <div className="chatBar py-2 px-4 flex justify-between items-center bg-teal-500">
-        <div className="rounded-full overflow-hidden w-14 h-14 grid place-items-center bg-teal-950">
-          <img
-            className="w-full h-full object-contain rounded-md overflow-hidden"
-            src={userChats[currentConversationID]?.converPhoto}
+        <div className="flex gap-2 items-center ">
+          <BackArrowIcon
+            className="lg:hidden w-10 h-10 fill-neutral-50 dark:fill-neutral-950 hover:fill-neutral-950 hover:dark:fill-neutral-50 hover:cursor-pointer"
+            onClick={() => setCurrentConversationID("")}
           />
+          <div className="rounded-full overflow-hidden w-14 h-14 grid place-items-center bg-teal-950 ">
+            <img
+              className="w-full h-full object-contain rounded-md overflow-hidden"
+              src={userChats[currentConversationID]?.converPhoto}
+            />
+          </div>
         </div>
         <h1 className="font-bold text-xl text-neutral-50 dark:text-neutral-950">
           {userChats[currentConversationID]?.chatName}
@@ -39,7 +46,9 @@ const Chat = () => {
       <Input />
     </div>
   ) : (
-    <div className="w-full h-full text-lg grid place-items-center">Select a conversation</div>
+    <div className="w-full h-full text-lg grid place-items-center">
+      Select a conversation
+    </div>
   );
 };
 

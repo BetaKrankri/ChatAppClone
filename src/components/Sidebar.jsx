@@ -1,10 +1,17 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Search from "./Search";
 import Chats from "./Chats.jsx";
+import { HomePageContext } from "../context/HomePageContext";
 
 const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(true);
+  const { currentConversationID } = useContext(HomePageContext);
+
+  useEffect(() => {
+    setIsOpen(() => currentConversationID ? false : true);
+  }, [currentConversationID]);
+
   return (
     <div
       className={`Wrapper ${
