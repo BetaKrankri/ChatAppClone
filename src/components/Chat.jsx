@@ -1,20 +1,24 @@
 import { AddContactIcon, SearchIcon } from "../assets/icons";
 import Messages from "./Messages";
 import Input from "./Input";
+import { useContext } from "react";
+import { HomePageContext } from "../context/HomePageContext";
 
 const Chat = () => {
-  return (
+  const { currentConversationID, userChats } = useContext(HomePageContext);
+
+  return currentConversationID ? (
     <div className="w-full h-full flex flex-col">
       {/* Top */}
       <div className="chatBar py-2 px-4 flex justify-between items-center bg-teal-500">
         <div className="rounded-full overflow-hidden w-14 h-14 grid place-items-center bg-teal-950">
           <img
             className="w-full h-full object-contain rounded-md overflow-hidden"
-            src=""
+            src={userChats[currentConversationID]?.converPhoto}
           />
         </div>
         <h1 className="font-bold text-xl text-neutral-50 dark:text-neutral-950">
-          Juan Macanei
+          {userChats[currentConversationID]?.chatName}
         </h1>
         <div className="flex gap-4 items ">
           <button
@@ -30,10 +34,12 @@ const Chat = () => {
         </div>
       </div>
       {/* Center */}
-        <Messages />
+      <Messages />
       {/* Bottom */}
       <Input />
     </div>
+  ) : (
+    <div className="w-full h-full text-lg grid place-items-center">Select a conversation</div>
   );
 };
 

@@ -1,16 +1,23 @@
-import React from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
-const Message = ({ isOwner }) => {
+const Message = ({ message }) => {
+  const { currentUser } = useContext(AuthContext);
+
+  const isOwner = message.senderId === currentUser.uid;
+
   return (
     <div
       className={`text-neutral-950 dark:text-neutral-50 max-w-[80%] lg:max-w-[55%]  flex flex-col ${
         isOwner ? "self-end items-end" : "self-start items-start"
       }`}
     >
-      {/* <img
-        src="https://i.pinimg.com/originals/40/db/88/40db88db54a0fdcdb427db5481b6e511.jpg"
-        className="object-contain w-full max-w-md rounded-xl mt-2"
-      /> */}
+      {message.content?.picture && (
+        <img
+          src={message.content.picture}
+          className="object-contain w-full max-w-md rounded-xl mt-2"
+        />
+      )}
       <div
         className={`TextContainer ${
           isOwner
@@ -18,11 +25,7 @@ const Message = ({ isOwner }) => {
             : "bg-teal-100 dark:text-teal-900 rounded-ss-none"
         } rounded-lg px-3 py-2 mt-2`}
       >
-        <p>
-          Lorem accusamus et iusto odio dignissimos ducimus qui blanditiis
-          praesentium voluptatum deleniti atque corruptKi quos dolores et quas
-          molestias excepturi si
-        </p>
+        {message.content?.text && <p>{message.content.text}</p>}
       </div>
       <span className="text-xs">16:44</span>
     </div>

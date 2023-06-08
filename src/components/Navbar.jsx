@@ -14,10 +14,12 @@ const Navbar = () => {
     <div className="w-full px-4 md:py-2 py-2.5 flex justify-between items-center bg-teal-500 rounded-sm text-neutral-950 relative">
       <div className="flex items-center gap-4">
         <div className="rounded-full overflow-hidden w-14 h-14 grid place-items-center bg-teal-950">
-          <img
-            className="w-full h-full object-cover rounded-md overflow-hidden"
-            src={currentUser.photoURL}
-          />
+          {currentUser.photoURL && (
+            <img
+              className="w-full h-full object-cover rounded-md overflow-hidden"
+              src={currentUser.photoURL}
+            />
+          )}
         </div>
         <p className=" text-lg font-bold text-neutral-50 dark:text-neutral-950">
           {currentUser.displayName}
